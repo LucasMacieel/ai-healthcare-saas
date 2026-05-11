@@ -1,14 +1,20 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import en from './en.json';
-import ptBR from './pt-BR.json';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import en from "./en.json";
+import ptBR from "./pt-BR.json";
 
-export type Locale = 'en' | 'pt-BR';
+export type Locale = "en" | "pt-BR";
 
 type Translations = typeof en;
 
 const dictionaries: Record<Locale, Translations> = {
-  'en': en,
-  'pt-BR': ptBR,
+  en: en,
+  "pt-BR": ptBR,
 };
 
 interface LanguageContextType {
@@ -17,23 +23,25 @@ interface LanguageContextType {
   t: (key: keyof Translations) => string;
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const LanguageContext = createContext<LanguageContextType | undefined>(
+  undefined,
+);
 
 function detectLocale(): Locale {
   // Check localStorage first
-  if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('locale');
-    if (saved === 'en' || saved === 'pt-BR') return saved;
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("locale");
+    if (saved === "en" || saved === "pt-BR") return saved;
 
     // Auto-detect from browser
     const browserLang = navigator.language;
-    if (browserLang === 'pt-BR' || browserLang.startsWith('pt')) return 'pt-BR';
+    if (browserLang === "pt-BR" || browserLang.startsWith("pt")) return "pt-BR";
   }
-  return 'en';
+  return "en";
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('en');
+  const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
     setLocaleState(detectLocale());
@@ -46,7 +54,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);
-    localStorage.setItem('locale', newLocale);
+    localStorage.setItem("locale", newLocale);
   };
 
   const t = (key: keyof Translations): string => {
@@ -62,6 +70,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
 export function useLanguage(): LanguageContextType {
   const ctx = useContext(LanguageContext);
-  if (!ctx) throw new Error('useLanguage must be used within a LanguageProvider');
+  if (!ctx)
+    throw new Error("useLanguage must be used within a LanguageProvider");
   return ctx;
 }

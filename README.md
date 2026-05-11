@@ -60,26 +60,28 @@ Language support is implemented via a lightweight React Context (`LanguageContex
 ## 🛠️ Tech Stack
 
 ### Frontend
-| Package | Version | Purpose |
-|---|---|---|
-| Next.js | 16.2.6 | React framework & routing |
-| React | 19.2.4 | UI library |
-| TypeScript | ^5 | Type safety |
-| Tailwind CSS | ^4 | Styling |
-| `@clerk/nextjs` | ^6.39.0 | Auth & subscription gating |
-| `@microsoft/fetch-event-source` | ^2.0.1 | SSE streaming client |
-| `react-markdown` | ^10.1.0 | Markdown rendering |
-| `remark-gfm` / `remark-breaks` | ^4 | Markdown plugins |
-| `react-datepicker` | ^9.1.0 | Date picker |
-| `html2pdf.js` | ^0.14.0 | PDF export |
+
+| Package                         | Version | Purpose                    |
+| ------------------------------- | ------- | -------------------------- |
+| Next.js                         | 16.2.6  | React framework & routing  |
+| React                           | 19.2.4  | UI library                 |
+| TypeScript                      | ^5      | Type safety                |
+| Tailwind CSS                    | ^4      | Styling                    |
+| `@clerk/nextjs`                 | ^6.39.0 | Auth & subscription gating |
+| `@microsoft/fetch-event-source` | ^2.0.1  | SSE streaming client       |
+| `react-markdown`                | ^10.1.0 | Markdown rendering         |
+| `remark-gfm` / `remark-breaks`  | ^4      | Markdown plugins           |
+| `react-datepicker`              | ^9.1.0  | Date picker                |
+| `html2pdf.js`                   | ^0.14.0 | PDF export                 |
 
 ### Backend
-| Package | Purpose |
-|---|---|
-| FastAPI | HTTP API framework |
-| Uvicorn | ASGI server |
-| Pydantic | Request validation |
-| `google-genai` | Gemini API client |
+
+| Package              | Purpose              |
+| -------------------- | -------------------- |
+| FastAPI              | HTTP API framework   |
+| Uvicorn              | ASGI server          |
+| Pydantic             | Request validation   |
+| `google-genai`       | Gemini API client    |
 | `fastapi-clerk-auth` | Clerk JWT middleware |
 
 ---
@@ -123,6 +125,7 @@ GEMINI_API_KEY=AIza...
 ### 3. Configure Clerk Subscription
 
 In your Clerk dashboard:
+
 1. Create a **plan** with the slug `premium_subscription`.
 2. Enable the **Billing** feature and configure a pricing table.
 
@@ -133,12 +136,15 @@ The `/product` page uses `<Protect plan="premium_subscription">` — users witho
 You need to run both the Next.js frontend and the FastAPI backend simultaneously.
 
 **Frontend** (terminal 1):
+
 ```bash
 npm run dev
 ```
+
 Open [http://localhost:3000](http://localhost:3000).
 
 **Backend** (terminal 2):
+
 ```bash
 uvicorn api.index:app --reload --port 8000
 ```
@@ -180,12 +186,14 @@ saas/
 Generates a streaming consultation summary.
 
 **Headers:**
+
 ```
 Authorization: Bearer <clerk-jwt>
 Content-Type: application/json
 ```
 
 **Request Body:**
+
 ```json
 {
   "patient_name": "Jane Doe",
@@ -198,6 +206,7 @@ Content-Type: application/json
 ```
 
 **Supported Specialties:**
+
 - `General Practice`
 - `Cardiology`
 - `Dermatology`
@@ -206,37 +215,47 @@ Content-Type: application/json
 - `Psychiatry`
 
 **Supported Urgency Levels:**
+
 - `routine`
 - `urgent`
 - `emergency`
 
 **Supported Languages:**
+
 - `en` (English — default)
 - `pt-BR` (Brazilian Portuguese)
 
 **Response:** `text/event-stream` — SSE stream of Markdown text chunks.
 
 **Output Format — English (`language: "en"`):**
+
 ```markdown
 ### Summary of visit for the doctor's records
+
 ...
 
 ### Next steps for the doctor
+
 ...
 
 ### Draft of email to patient in patient-friendly language
+
 ...
 ```
 
 **Output Format — Portuguese (`language: "pt-BR"`):**
+
 ```markdown
 ### Resumo da consulta para os registros do médico
+
 ...
 
 ### Próximos passos para o médico
+
 ...
 
 ### Rascunho de e-mail ao paciente em linguagem acessível
+
 ...
 ```
 
@@ -252,12 +271,12 @@ Content-Type: application/json
 
 ## 📦 Available Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start Next.js development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
+| Command         | Description                      |
+| --------------- | -------------------------------- |
+| `npm run dev`   | Start Next.js development server |
+| `npm run build` | Build for production             |
+| `npm run start` | Start production server          |
+| `npm run lint`  | Run ESLint                       |
 
 ---
 

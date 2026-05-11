@@ -2,7 +2,11 @@ import os
 from fastapi import FastAPI, Depends  # type: ignore
 from fastapi.responses import StreamingResponse  # type: ignore
 from pydantic import BaseModel  # type: ignore
-from fastapi_clerk_auth import ClerkConfig, ClerkHTTPBearer, HTTPAuthorizationCredentials  # type: ignore
+from fastapi_clerk_auth import ( # type: ignore
+    ClerkConfig,
+    ClerkHTTPBearer,
+    HTTPAuthorizationCredentials,
+)  # type: ignore
 from google import genai  # type: ignore
 from google.genai import types  # type: ignore
 
@@ -62,21 +66,31 @@ def get_system_prompt(specialty: str, language: str = "en") -> str:
         base = system_prompt_pt.strip()
         prompts = {
             "General Practice": base,
-            "Cardiology": base + "\n\nConcentre-se em sintomas cardíacos e saúde cardiovascular.",
-            "Dermatology": base + "\n\nConcentre-se em condições de pele, erupções cutâneas e tratamentos dermatológicos.",
-            "Neurology": base + "\n\nConcentre-se em exames neurológicos, reflexos e sintomas do sistema nervoso.",
-            "Pediatrics": base + "\n\nUse linguagem adequada para crianças nas comunicações com pacientes, dirigindo-se aos pais/responsáveis.",
-            "Psychiatry": base + "\n\nInclua considerações de saúde mental, avaliações de humor e recursos psiquiátricos.",
+            "Cardiology": base
+            + "\n\nConcentre-se em sintomas cardíacos e saúde cardiovascular.",
+            "Dermatology": base
+            + "\n\nConcentre-se em condições de pele, erupções cutâneas e tratamentos dermatológicos.",
+            "Neurology": base
+            + "\n\nConcentre-se em exames neurológicos, reflexos e sintomas do sistema nervoso.",
+            "Pediatrics": base
+            + "\n\nUse linguagem adequada para crianças nas comunicações com pacientes, dirigindo-se aos pais/responsáveis.",
+            "Psychiatry": base
+            + "\n\nInclua considerações de saúde mental, avaliações de humor e recursos psiquiátricos.",
         }
     else:
         base = system_prompt_en.strip()
         prompts = {
             "General Practice": base,
-            "Cardiology": base + "\n\nFocus on cardiac symptoms and cardiovascular health.",
-            "Dermatology": base + "\n\nFocus on skin conditions, rashes, and dermatological treatments.",
-            "Neurology": base + "\n\nFocus on neurological exams, reflexes, and nervous system symptoms.",
-            "Pediatrics": base + "\n\nUse child-friendly language in patient communications, addressing parents/guardians.",
-            "Psychiatry": base + "\n\nInclude mental health considerations, mood assessments, and psychiatric resources.",
+            "Cardiology": base
+            + "\n\nFocus on cardiac symptoms and cardiovascular health.",
+            "Dermatology": base
+            + "\n\nFocus on skin conditions, rashes, and dermatological treatments.",
+            "Neurology": base
+            + "\n\nFocus on neurological exams, reflexes, and nervous system symptoms.",
+            "Pediatrics": base
+            + "\n\nUse child-friendly language in patient communications, addressing parents/guardians.",
+            "Psychiatry": base
+            + "\n\nInclude mental health considerations, mood assessments, and psychiatric resources.",
         }
     return prompts.get(specialty, base)
 
@@ -86,7 +100,6 @@ def consultation_summary(
     visit: Visit,
     creds: HTTPAuthorizationCredentials = Depends(clerk_guard),
 ):
-    user_id = creds.decoded["sub"]  # Available for tracking/auditing
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
     user_prompt = user_prompt_for(visit)
