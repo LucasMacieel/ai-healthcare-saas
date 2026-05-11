@@ -3,7 +3,8 @@ from fastapi import FastAPI, Depends  # type: ignore
 from fastapi.responses import StreamingResponse  # type: ignore
 from pydantic import BaseModel  # type: ignore
 from fastapi_clerk_auth import ClerkConfig, ClerkHTTPBearer, HTTPAuthorizationCredentials  # type: ignore
-from openai import OpenAI  # type: ignore
+from google import genai  # type: ignore
+from google.genai import types  # type: ignore
 
 app = FastAPI()
 clerk_config = ClerkConfig(jwks_url=os.getenv("CLERK_JWKS_URL"))
@@ -57,30 +58,34 @@ def consultation_summary(
     creds: HTTPAuthorizationCredentials = Depends(clerk_guard),
 ):
     user_id = creds.decoded["sub"]  # Available for tracking/auditing
-    client = OpenAI()
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
     user_prompt = user_prompt_for(visit)
-    system_prompt = get_system_prompt(visit.specialty)
-
-    prompt = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_prompt},
-    ]
-
-    stream = client.chat.completions.create(
-        model="gpt-5-nano",
-        messages=prompt,
-        stream=True,
-    )
+    sys_prompt = get_system_prompt(visit.specialty)
 
     def event_stream():
-        for chunk in stream:
-            text = chunk.choices[0].delta.content
-            if text:
-                lines = text.split("\n")
-                for line in lines[:-1]:
-                    yield f"data: {line}\n\n"
-                    yield "data:  \n"
-                yield f"data: {lines[-1]}\n\n"
+        try:
+            stream = client.models.generate_content_stream(
+                model="gemini-2.5-flash",
+                contents=user_prompt,
+                config=types.GenerateContentConfig(
+                    system_instruction=sys_prompt,
+                ),
+            )
+
+            for chunk in stream:
+                # Gemini 2.5 thinking chunks raise ValueError on .text access
+                try:
+                    text = chunk.text
+                except (ValueError, AttributeError):
+                    continue
+                if text:
+                    lines = text.split("\n")
+                    for line in lines[:-1]:
+                        yield f"data: {line}\n\n"
+                        yield "data:  \n"
+                    yield f"data: {lines[-1]}\n\n"
+        except Exception as e:
+            yield f"data: **Error:** {e}\n\n"
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
