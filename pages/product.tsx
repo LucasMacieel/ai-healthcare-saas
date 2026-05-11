@@ -15,6 +15,8 @@ function ConsultationForm() {
     // Form state
     const [patientName, setPatientName] = useState('');
     const [visitDate, setVisitDate] = useState<Date | null>(new Date());
+    const [specialty, setSpecialty] = useState('General Practice');
+    const [urgency, setUrgency] = useState<'routine' | 'urgent' | 'emergency'>('routine');
     const [notes, setNotes] = useState('');
 
     // Streaming state
@@ -46,6 +48,8 @@ function ConsultationForm() {
             body: JSON.stringify({
                 patient_name: patientName,
                 date_of_visit: visitDate?.toISOString().slice(0, 10),
+                specialty,
+                urgency,
                 notes,
             }),
             onmessage(ev) {
@@ -98,6 +102,41 @@ function ConsultationForm() {
                         required
                         className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     />
+                </div>
+
+                <div className="space-y-2">
+                    <label htmlFor="specialty" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Specialty
+                    </label>
+                    <select
+                        id="specialty"
+                        value={specialty}
+                        onChange={(e) => setSpecialty(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    >
+                        <option value="General Practice">General Practice</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Psychiatry">Psychiatry</option>
+                    </select>
+                </div>
+
+                <div className="space-y-2">
+                    <label htmlFor="urgency" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Urgency Level
+                    </label>
+                    <select
+                        id="urgency"
+                        value={urgency}
+                        onChange={(e) => setUrgency(e.target.value as 'routine' | 'urgent' | 'emergency')}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    >
+                        <option value="routine">Routine</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="emergency">Emergency</option>
+                    </select>
                 </div>
 
                 <div className="space-y-2">

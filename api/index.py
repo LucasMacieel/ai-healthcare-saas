@@ -13,6 +13,8 @@ clerk_guard = ClerkHTTPBearer(clerk_config)
 class Visit(BaseModel):
     patient_name: str
     date_of_visit: str
+    specialty: str
+    urgency: str
     notes: str
 
 
@@ -30,6 +32,8 @@ def user_prompt_for(visit: Visit) -> str:
     return f"""Create the summary, next steps and draft email for:
 Patient Name: {visit.patient_name}
 Date of Visit: {visit.date_of_visit}
+Specialty: {visit.specialty}
+Urgency Level: {visit.urgency.title()}
 Notes:
 {visit.notes}"""
 
