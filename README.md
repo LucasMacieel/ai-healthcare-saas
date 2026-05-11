@@ -1,40 +1,234 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# MediNotes Pro
 
-## Getting Started
+> AI-powered consultation note assistant for healthcare professionals
 
-First, run the development server:
+MediNotes Pro transforms raw consultation notes into structured medical record summaries, actionable next steps, and patient-friendly email drafts — all in seconds, powered by Google Gemini.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## ✨ Features
+
+- **AI-Powered Summaries** — Generates structured consultation summaries for doctor records using Gemini 2.5 Flash with real-time streaming output.
+- **Specialty-Aware Prompts** — Tailored AI instructions for six medical specialties: General Practice, Cardiology, Dermatology, Neurology, Pediatrics, and Psychiatry.
+- **Urgency Triage** — Supports three urgency levels (Routine, Urgent, Emergency) to contextualize AI-generated recommendations.
+- **Patient Email Drafts** — Automatically drafts clear, patient-friendly follow-up emails from each consultation.
+- **Export to PDF** — One-click PDF export of the full consultation summary via `html2pdf.js`.
+- **Copy Email to Clipboard** — Extracts and copies just the patient email section with a single click.
+- **Subscription Gating** — Premium features protected behind a Clerk subscription plan (`premium_subscription`), with an embedded pricing table for upsell.
+- **Authentication** — Secure sign-in and JWT-based API authorization via Clerk.
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────┐
+│            Next.js Frontend             │
+│  pages/index.tsx   – Landing page       │
+│  pages/product.tsx – Consultation app   │
+└──────────────┬──────────────────────────┘
+               │  POST /api  (SSE stream)
+               │  Bearer JWT (Clerk)
+┌──────────────▼──────────────────────────┐
+│           FastAPI Backend               │
+│  api/index.py  – /api endpoint          │
+│  • Clerk JWT validation                 │
+│  • Specialty system prompt selection    │
+│  • Gemini 2.5 Flash streaming           │
+└──────────────┬──────────────────────────┘
+               │
+┌──────────────▼──────────────────────────┐
+│         Google Gemini 2.5 Flash         │
+│  Streaming text generation              │
+└─────────────────────────────────────────┘
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The frontend uses **Server-Sent Events (SSE)** via `@microsoft/fetch-event-source` to stream tokens from the FastAPI backend in real time. The backend validates the Clerk JWT on every request before forwarding to Gemini.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+---
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 🛠️ Tech Stack
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### Frontend
+| Package | Version | Purpose |
+|---|---|---|
+| Next.js | 16.2.6 | React framework & routing |
+| React | 19.2.4 | UI library |
+| TypeScript | ^5 | Type safety |
+| Tailwind CSS | ^4 | Styling |
+| `@clerk/nextjs` | ^6.39.0 | Auth & subscription gating |
+| `@microsoft/fetch-event-source` | ^2.0.1 | SSE streaming client |
+| `react-markdown` | ^10.1.0 | Markdown rendering |
+| `remark-gfm` / `remark-breaks` | ^4 | Markdown plugins |
+| `react-datepicker` | ^9.1.0 | Date picker |
+| `html2pdf.js` | ^0.14.0 | PDF export |
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Backend
+| Package | Purpose |
+|---|---|
+| FastAPI | HTTP API framework |
+| Uvicorn | ASGI server |
+| Pydantic | Request validation |
+| `google-genai` | Gemini API client |
+| `fastapi-clerk-auth` | Clerk JWT middleware |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Getting Started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+### Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Node.js ≥ 18
+- Python ≥ 3.10
+- A [Clerk](https://clerk.com) account with a configured application
+- A [Google AI Studio](https://aistudio.google.com) API key (Gemini)
 
-## Deploy on Vercel
+### 1. Clone & Install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+git clone <your-repo-url>
+cd saas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+# Install JS dependencies
+npm install
+
+# Install Python dependencies
+pip install -r requirements.txt
+```
+
+### 2. Configure Environment Variables
+
+Create a `.env.local` file in the project root:
+
+```env
+# Clerk — from your Clerk dashboard
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+CLERK_SECRET_KEY=sk_...
+CLERK_JWKS_URL=https://<your-clerk-domain>/.well-known/jwks.json
+
+# Google Gemini
+GEMINI_API_KEY=AIza...
+```
+
+### 3. Configure Clerk Subscription
+
+In your Clerk dashboard:
+1. Create a **plan** with the slug `premium_subscription`.
+2. Enable the **Billing** feature and configure a pricing table.
+
+The `/product` page uses `<Protect plan="premium_subscription">` — users without an active subscription see the pricing table instead.
+
+### 4. Run the Development Servers
+
+You need to run both the Next.js frontend and the FastAPI backend simultaneously.
+
+**Frontend** (terminal 1):
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000).
+
+**Backend** (terminal 2):
+```bash
+uvicorn api.index:app --reload --port 8000
+```
+
+> **Note:** In development, Next.js proxies `/api` requests to the FastAPI server. Verify your `next.config.ts` rewrites if needed.
+
+---
+
+## 📁 Project Structure
+
+```
+saas/
+├── api/
+│   └── index.py          # FastAPI app — /api endpoint, Gemini streaming
+├── pages/
+│   ├── _app.tsx          # App wrapper (Clerk provider)
+│   ├── _document.tsx     # Custom HTML document
+│   ├── index.tsx         # Landing page with feature showcase
+│   └── product.tsx       # Consultation form + AI output
+├── styles/               # Global CSS
+├── public/               # Static assets
+├── requirements.txt      # Python dependencies
+├── package.json          # Node dependencies & scripts
+├── next.config.ts        # Next.js configuration
+└── tsconfig.json         # TypeScript configuration
+```
+
+---
+
+## 🔌 API Reference
+
+### `POST /api`
+
+Generates a streaming consultation summary.
+
+**Headers:**
+```
+Authorization: Bearer <clerk-jwt>
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "patient_name": "Jane Doe",
+  "date_of_visit": "2026-05-11",
+  "specialty": "Cardiology",
+  "urgency": "routine",
+  "notes": "Patient presents with..."
+}
+```
+
+**Supported Specialties:**
+- `General Practice`
+- `Cardiology`
+- `Dermatology`
+- `Neurology`
+- `Pediatrics`
+- `Psychiatry`
+
+**Supported Urgency Levels:**
+- `routine`
+- `urgent`
+- `emergency`
+
+**Response:** `text/event-stream` — SSE stream of Markdown text chunks.
+
+**Output Format (Markdown):**
+```markdown
+### Summary of visit for the doctor's records
+...
+
+### Next steps for the doctor
+...
+
+### Draft of email to patient in patient-friendly language
+...
+```
+
+---
+
+## 🔒 Security Notes
+
+- **Never commit `.env.local`** — it contains live API keys. It is already listed in `.gitignore`.
+- All API requests are validated against Clerk's JWKS endpoint before reaching Gemini.
+- The `user_id` (`creds.decoded["sub"]`) is available in the backend for auditing or rate-limiting purposes.
+
+---
+
+## 📦 Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start Next.js development server |
+| `npm run build` | Build for production |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
+
+---
+
+## 📄 License
+
+This project is for demonstration purposes only and is not intended for clinical use.
