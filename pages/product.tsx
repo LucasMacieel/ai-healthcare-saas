@@ -22,6 +22,56 @@ function ConsultationForm() {
     // Streaming state
     const [output, setOutput] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
+
+    const handleExportPDF = async () => {
+        const element = document.getElementById('markdown-content');
+        if (!element) return;
+        
+        const html2pdf = (await import('html2pdf.js')).default;
+        
+        const opt = {
+            margin:       0.5,
+            filename:     'consultation_summary.pdf',
+            image:        { type: 'jpeg' as const, quality: 0.98 },
+            html2canvas:  { 
+                scale: 2,
+                onclone: (clonedDoc: Document) => {
+                    const style = clonedDoc.createElement('style');
+                    style.textContent = `
+                        #markdown-content, #markdown-content * {
+                            color: black !important;
+                            -webkit-text-fill-color: black !important;
+                        }
+                        @media (prefers-color-scheme: dark) {
+                            #markdown-content, #markdown-content * {
+                                color: black !important;
+                                -webkit-text-fill-color: black !important;
+                            }
+                        }
+                    `;
+                    clonedDoc.head.appendChild(style);
+                }
+            },
+            jsPDF:        { unit: 'in' as const, format: 'letter' as const, orientation: 'portrait' as const }
+        };
+        
+        html2pdf().set(opt).from(element).save();
+    };
+
+    const handleCopyEmail = () => {
+        const emailSectionIndex = output.indexOf('### Draft of email to patient');
+        if (emailSectionIndex !== -1) {
+            const emailContent = output.substring(emailSectionIndex);
+            const lines = emailContent.split('\n');
+            const emailBody = lines.slice(1).join('\n').trim();
+            navigator.clipboard.writeText(emailBody);
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
+        } else {
+            alert('Email section not found in the summary.');
+        }
+    };
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
@@ -165,10 +215,26 @@ function ConsultationForm() {
 
             {output && (
                 <section className="mt-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg p-8">
-                    <div className="markdown-content prose prose-blue dark:prose-invert max-w-none">
+                    <div id="markdown-content" className="markdown-content prose prose-blue dark:prose-invert max-w-none">
                         <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                             {output}
                         </ReactMarkdown>
+                    </div>
+                    <div className="flex justify-end space-x-4 mb-6">
+                        <button
+                            type="button"
+                            onClick={handleExportPDF}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
+                        >
+                            Export PDF
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleCopyEmail}
+                            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
+                        >
+                            {isCopied ? 'Copied!' : 'Copy Email'}
+                        </button>
                     </div>
                 </section>
             )}
