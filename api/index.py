@@ -38,6 +38,19 @@ Notes:
 {visit.notes}"""
 
 
+def get_system_prompt(specialty: str) -> str:
+    base = system_prompt.strip()
+    prompts = {
+        "General Practice": base,
+        "Cardiology": base + "\n\nFocus on cardiac symptoms and cardiovascular health.",
+        "Dermatology": base + "\n\nFocus on skin conditions, rashes, and dermatological treatments.",
+        "Neurology": base + "\n\nFocus on neurological exams, reflexes, and nervous system symptoms.",
+        "Pediatrics": base + "\n\nUse child-friendly language in patient communications, addressing parents/guardians.",
+        "Psychiatry": base + "\n\nInclude mental health considerations, mood assessments, and psychiatric resources."
+    }
+    return prompts.get(specialty, base)
+
+
 @app.post("/api")
 def consultation_summary(
     visit: Visit,
@@ -47,6 +60,7 @@ def consultation_summary(
     client = OpenAI()
 
     user_prompt = user_prompt_for(visit)
+    system_prompt = get_system_prompt(visit.specialty)
 
     prompt = [
         {"role": "system", "content": system_prompt},
