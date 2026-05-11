@@ -17,9 +17,10 @@ class Visit(BaseModel):
     specialty: str
     urgency: str
     notes: str
+    language: str = "en"
 
 
-system_prompt = """
+system_prompt_en = """
 You are provided with notes written by a doctor from a patient's visit.
 Your job is to summarize the visit for the doctor and provide an email.
 Reply with exactly three sections with the headings:
@@ -28,8 +29,25 @@ Reply with exactly three sections with the headings:
 ### Draft of email to patient in patient-friendly language
 """
 
+system_prompt_pt = """
+Você recebeu anotações feitas por um médico durante a consulta de um paciente.
+Seu trabalho é resumir a consulta para o médico e redigir um e-mail para o paciente.
+Responda com exatamente três seções com os títulos:
+### Resumo da consulta para os registros do médico
+### Próximos passos para o médico
+### Rascunho de e-mail ao paciente em linguagem acessível
+"""
+
 
 def user_prompt_for(visit: Visit) -> str:
+    if visit.language == "pt-BR":
+        return f"""Crie o resumo, os próximos passos e o rascunho do e-mail para:
+Nome do Paciente: {visit.patient_name}
+Data da Consulta: {visit.date_of_visit}
+Especialidade: {visit.specialty}
+Nível de Urgência: {visit.urgency.title()}
+Anotações:
+{visit.notes}"""
     return f"""Create the summary, next steps and draft email for:
 Patient Name: {visit.patient_name}
 Date of Visit: {visit.date_of_visit}
@@ -39,16 +57,27 @@ Notes:
 {visit.notes}"""
 
 
-def get_system_prompt(specialty: str) -> str:
-    base = system_prompt.strip()
-    prompts = {
-        "General Practice": base,
-        "Cardiology": base + "\n\nFocus on cardiac symptoms and cardiovascular health.",
-        "Dermatology": base + "\n\nFocus on skin conditions, rashes, and dermatological treatments.",
-        "Neurology": base + "\n\nFocus on neurological exams, reflexes, and nervous system symptoms.",
-        "Pediatrics": base + "\n\nUse child-friendly language in patient communications, addressing parents/guardians.",
-        "Psychiatry": base + "\n\nInclude mental health considerations, mood assessments, and psychiatric resources."
-    }
+def get_system_prompt(specialty: str, language: str = "en") -> str:
+    if language == "pt-BR":
+        base = system_prompt_pt.strip()
+        prompts = {
+            "General Practice": base,
+            "Cardiology": base + "\n\nConcentre-se em sintomas cardíacos e saúde cardiovascular.",
+            "Dermatology": base + "\n\nConcentre-se em condições de pele, erupções cutâneas e tratamentos dermatológicos.",
+            "Neurology": base + "\n\nConcentre-se em exames neurológicos, reflexos e sintomas do sistema nervoso.",
+            "Pediatrics": base + "\n\nUse linguagem adequada para crianças nas comunicações com pacientes, dirigindo-se aos pais/responsáveis.",
+            "Psychiatry": base + "\n\nInclua considerações de saúde mental, avaliações de humor e recursos psiquiátricos.",
+        }
+    else:
+        base = system_prompt_en.strip()
+        prompts = {
+            "General Practice": base,
+            "Cardiology": base + "\n\nFocus on cardiac symptoms and cardiovascular health.",
+            "Dermatology": base + "\n\nFocus on skin conditions, rashes, and dermatological treatments.",
+            "Neurology": base + "\n\nFocus on neurological exams, reflexes, and nervous system symptoms.",
+            "Pediatrics": base + "\n\nUse child-friendly language in patient communications, addressing parents/guardians.",
+            "Psychiatry": base + "\n\nInclude mental health considerations, mood assessments, and psychiatric resources.",
+        }
     return prompts.get(specialty, base)
 
 
@@ -61,7 +90,7 @@ def consultation_summary(
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
     user_prompt = user_prompt_for(visit)
-    sys_prompt = get_system_prompt(visit.specialty)
+    sys_prompt = get_system_prompt(visit.specialty, visit.language)
 
     def event_stream():
         try:

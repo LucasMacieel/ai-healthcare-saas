@@ -11,6 +11,7 @@ MediNotes Pro transforms raw consultation notes into structured medical record s
 - **AI-Powered Summaries** — Generates structured consultation summaries for doctor records using Gemini 2.5 Flash with real-time streaming output.
 - **Specialty-Aware Prompts** — Tailored AI instructions for six medical specialties: General Practice, Cardiology, Dermatology, Neurology, Pediatrics, and Psychiatry.
 - **Urgency Triage** — Supports three urgency levels (Routine, Urgent, Emergency) to contextualize AI-generated recommendations.
+- **Bilingual Support (EN / PT-BR)** — Full internationalization for English and Brazilian Portuguese. The UI auto-detects the browser language, persists the choice in `localStorage`, and the LLM system prompt adapts so AI output is generated in the selected language.
 - **Patient Email Drafts** — Automatically drafts clear, patient-friendly follow-up emails from each consultation.
 - **Export to PDF** — One-click PDF export of the full consultation summary via `html2pdf.js`.
 - **Copy Email to Clipboard** — Extracts and copies just the patient email section with a single click.
@@ -44,6 +45,15 @@ MediNotes Pro transforms raw consultation notes into structured medical record s
 ```
 
 The frontend uses **Server-Sent Events (SSE)** via `@microsoft/fetch-event-source` to stream tokens from the FastAPI backend in real time. The backend validates the Clerk JWT on every request before forwarding to Gemini.
+
+### Internationalization (i18n)
+
+Language support is implemented via a lightweight React Context (`LanguageContext`) with JSON dictionaries — no external i18n library is required.
+
+1. **Browser auto-detection** — On first visit, `navigator.language` is checked; if it starts with `pt`, the UI defaults to Brazilian Portuguese.
+2. **LocalStorage persistence** — The user's language choice is saved and restored on subsequent visits.
+3. **Language toggle** — A 🇺🇸/🇧🇷 toggle button is available on every page.
+4. **Backend integration** — The selected locale is sent as a `language` field in the API request. The backend uses language-specific system prompts and user prompt templates so the LLM generates output in the correct language.
 
 ---
 
@@ -142,18 +152,23 @@ uvicorn api.index:app --reload --port 8000
 ```
 saas/
 ├── api/
-│   └── index.py          # FastAPI app — /api endpoint, Gemini streaming
+│   └── index.py              # FastAPI app — /api endpoint, Gemini streaming
+├── i18n/
+│   ├── en.json               # English translation dictionary
+│   ├── pt-BR.json            # Brazilian Portuguese translation dictionary
+│   ├── LanguageContext.tsx   # React Context — locale state, auto-detect, t()
+│   └── LanguageToggle.tsx    # 🇺🇸/🇧🇷 toggle button component
 ├── pages/
-│   ├── _app.tsx          # App wrapper (Clerk provider)
-│   ├── _document.tsx     # Custom HTML document
-│   ├── index.tsx         # Landing page with feature showcase
-│   └── product.tsx       # Consultation form + AI output
-├── styles/               # Global CSS
-├── public/               # Static assets
-├── requirements.txt      # Python dependencies
-├── package.json          # Node dependencies & scripts
-├── next.config.ts        # Next.js configuration
-└── tsconfig.json         # TypeScript configuration
+│   ├── _app.tsx              # App wrapper (Clerk + LanguageProvider)
+│   ├── _document.tsx         # Custom HTML document
+│   ├── index.tsx             # Landing page with feature showcase
+│   └── product.tsx           # Consultation form + AI output
+├── styles/                   # Global CSS
+├── public/                   # Static assets
+├── requirements.txt          # Python dependencies
+├── package.json              # Node dependencies & scripts
+├── next.config.ts            # Next.js configuration
+└── tsconfig.json             # TypeScript configuration
 ```
 
 ---
@@ -177,7 +192,8 @@ Content-Type: application/json
   "date_of_visit": "2026-05-11",
   "specialty": "Cardiology",
   "urgency": "routine",
-  "notes": "Patient presents with..."
+  "notes": "Patient presents with...",
+  "language": "en"
 }
 ```
 
@@ -194,9 +210,13 @@ Content-Type: application/json
 - `urgent`
 - `emergency`
 
+**Supported Languages:**
+- `en` (English — default)
+- `pt-BR` (Brazilian Portuguese)
+
 **Response:** `text/event-stream` — SSE stream of Markdown text chunks.
 
-**Output Format (Markdown):**
+**Output Format — English (`language: "en"`):**
 ```markdown
 ### Summary of visit for the doctor's records
 ...
@@ -205,6 +225,18 @@ Content-Type: application/json
 ...
 
 ### Draft of email to patient in patient-friendly language
+...
+```
+
+**Output Format — Portuguese (`language: "pt-BR"`):**
+```markdown
+### Resumo da consulta para os registros do médico
+...
+
+### Próximos passos para o médico
+...
+
+### Rascunho de e-mail ao paciente em linguagem acessível
 ...
 ```
 

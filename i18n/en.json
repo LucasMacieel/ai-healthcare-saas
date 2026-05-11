@@ -1,0 +1,57 @@
+{
+  "app_title": "MediNotes Pro",
+  "meta_title": "Healthcare Consultation Assistant",
+  "meta_description": "AI-powered medical consultation summaries",
+
+  "nav_sign_in": "Sign In",
+  "nav_go_to_app": "Go to App",
+
+  "hero_title_1": "Transform Your",
+  "hero_title_2": "Consultation Notes",
+  "hero_subtitle": "AI-powered assistant that generates professional summaries, action items, and patient communications from your consultation notes",
+
+  "feature_summaries_title": "Professional Summaries",
+  "feature_summaries_desc": "Generate comprehensive medical record summaries from your notes",
+  "feature_actions_title": "Action Items",
+  "feature_actions_desc": "Clear next steps and follow-up actions for every consultation",
+  "feature_emails_title": "Patient Emails",
+  "feature_emails_desc": "Draft clear, patient-friendly email communications automatically",
+
+  "cta_free_trial": "Start Free Trial",
+  "cta_open_app": "Open Consultation Assistant",
+
+  "trust_indicator": "For demonstration purposes only",
+
+  "consultation_heading": "Consultation Notes",
+  "label_patient_name": "Patient Name",
+  "placeholder_patient_name": "Enter patient's full name",
+  "label_date_of_visit": "Date of Visit",
+  "placeholder_date": "Select date",
+  "label_specialty": "Specialty",
+  "label_urgency": "Urgency Level",
+  "label_notes": "Consultation Notes",
+  "placeholder_notes": "Enter detailed consultation notes...",
+
+  "specialty_general": "General Practice",
+  "specialty_cardiology": "Cardiology",
+  "specialty_dermatology": "Dermatology",
+  "specialty_neurology": "Neurology",
+  "specialty_pediatrics": "Pediatrics",
+  "specialty_psychiatry": "Psychiatry",
+
+  "urgency_routine": "Routine",
+  "urgency_urgent": "Urgent",
+  "urgency_emergency": "Emergency",
+
+  "btn_generate": "Generate Summary",
+  "btn_generating": "Generating Summary...",
+  "btn_export_pdf": "Export PDF",
+  "btn_copy_email": "Copy Email",
+  "btn_copied": "Copied!",
+
+  "auth_required": "Authentication required",
+  "email_not_found": "Email section not found in the summary.",
+
+  "subscription_heading": "Healthcare Professional Plan",
+  "subscription_subtitle": "Streamline your patient consultations with AI-powered summaries"
+}
