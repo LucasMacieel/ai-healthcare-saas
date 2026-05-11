@@ -53,5 +53,11 @@
   "email_not_found": "Seção de e-mail não encontrada no resumo.",
 
   "subscription_heading": "Plano Profissional de Saúde",
-  "subscription_subtitle": "Otimize suas consultas com resumos gerados por inteligência artificial"
+  "subscription_subtitle": "Otimize suas consultas com resumos gerados por inteligência artificial",
+
+  "consultation_subtitle": "Preencha os dados da consulta abaixo",
+  "generated_summary": "Resumo Gerado",
+  "premium_plans": "Planos Premium",
+  "clinical_badge": "Documentação Clínica com IA",
+  "hipaa_compliant": "Compatível com HIPAA"
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Head from "next/head";
 import Link from "next/link";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useLanguage } from "../i18n/LanguageContext";
@@ -9,18 +10,40 @@ export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-12">
+    <>
+      <Head>
+        <title>{t("meta_title")}</title>
+      </Head>
+      <main className="min-h-screen medical-gradient">
+      <div className="container mx-auto px-4 py-8">
         {/* Navigation */}
-        <nav className="flex justify-between items-center mb-12">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-            {t("app_title")}
-          </h1>
-          <div className="flex items-center gap-4">
+        <nav className="flex justify-between items-center mb-16 glass-card rounded-2xl px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+            </div>
+            <h1 className="text-xl font-bold text-emerald-900 dark:text-emerald-100 tracking-tight">
+              {t("app_title")}
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
             <LanguageToggle />
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                <button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98]">
                   {t("nav_sign_in")}
                 </button>
               </SignInButton>
@@ -28,7 +51,7 @@ export default function Home() {
             <SignedIn>
               <Link
                 href="/product"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98]"
               >
                 {t("nav_go_to_app")}
               </Link>
@@ -38,77 +61,160 @@ export default function Home() {
         </nav>
 
         {/* Hero Section */}
-        <div className="text-center py-16">
-          <h2 className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6">
-            {t("hero_title_1")}
+        <div className="text-center py-16 fade-in-up">
+          {/* Medical Badge */}
+          <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 px-4 py-2 rounded-full text-sm font-medium mb-8">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+            {t("clinical_badge")}
+          </div>
+
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1]">
+            <span className="text-emerald-950 dark:text-white">
+              {t("hero_title_1")}
+            </span>
             <br />
-            {t("hero_title_2")}
+            <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 bg-clip-text text-transparent">
+              {t("hero_title_2")}
+            </span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-14 max-w-2xl mx-auto leading-relaxed">
             {t("hero_subtitle")}
           </p>
 
           {/* Features Grid */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-12">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-              <div className="relative bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 backdrop-blur-sm">
-                <div className="text-3xl mb-4">📋</div>
-                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16">
+            {/* Feature 1 */}
+            <div className="fade-in-up fade-in-up-delay-1">
+              <div className="glass-card rounded-2xl p-8 h-full text-left group cursor-default">
+                <div className="w-14 h-14 bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-800 dark:to-emerald-900 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">📋</span>
+                </div>
+                <h3 className="text-lg font-semibold mb-2 text-emerald-900 dark:text-emerald-100">
                   {t("feature_summaries_title")}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                   {t("feature_summaries_desc")}
                 </p>
               </div>
             </div>
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-              <div className="relative bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 backdrop-blur-sm">
-                <div className="text-3xl mb-4">✅</div>
-                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">
+
+            {/* Feature 2 */}
+            <div className="fade-in-up fade-in-up-delay-2">
+              <div className="glass-card rounded-2xl p-8 h-full text-left group cursor-default">
+                <div className="w-14 h-14 bg-gradient-to-br from-teal-100 to-teal-200 dark:from-teal-800 dark:to-teal-900 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">✅</span>
+                </div>
+                <h3 className="text-lg font-semibold mb-2 text-emerald-900 dark:text-emerald-100">
                   {t("feature_actions_title")}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                   {t("feature_actions_desc")}
                 </p>
               </div>
             </div>
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-              <div className="relative bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 backdrop-blur-sm">
-                <div className="text-3xl mb-4">📧</div>
-                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">
+
+            {/* Feature 3 */}
+            <div className="fade-in-up fade-in-up-delay-3">
+              <div className="glass-card rounded-2xl p-8 h-full text-left group cursor-default">
+                <div className="w-14 h-14 bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-cyan-800 dark:to-cyan-900 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">📧</span>
+                </div>
+                <h3 className="text-lg font-semibold mb-2 text-emerald-900 dark:text-emerald-100">
                   {t("feature_emails_title")}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                   {t("feature_emails_desc")}
                 </p>
               </div>
             </div>
           </div>
 
+          {/* CTA Buttons */}
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-105">
-                {t("cta_free_trial")}
+              <button className="group bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-4 px-10 rounded-2xl text-lg transition-all duration-300 shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.03] active:scale-[0.98]">
+                <span className="flex items-center gap-2">
+                  {t("cta_free_trial")}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 transition-transform group-hover:translate-x-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </span>
               </button>
             </SignInButton>
           </SignedOut>
           <SignedIn>
             <Link href="/product">
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-105">
-                {t("cta_open_app")}
+              <button className="group bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-4 px-10 rounded-2xl text-lg transition-all duration-300 shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.03] active:scale-[0.98]">
+                <span className="flex items-center gap-2">
+                  {t("cta_open_app")}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 transition-transform group-hover:translate-x-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </span>
               </button>
             </Link>
           </SignedIn>
         </div>
 
         {/* Trust Indicators */}
-        <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>{t("trust_indicator")}</p>
+        <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8">
+          <div className="inline-flex items-center gap-6 glass-card rounded-full px-8 py-3">
+            <span className="flex items-center gap-1.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-emerald-500"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              {t("hipaa_compliant")}
+            </span>
+            <span className="w-px h-4 bg-gray-300 dark:bg-gray-600"></span>
+            <span className="flex items-center gap-1.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-emerald-500"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              {t("trust_indicator")}
+            </span>
+          </div>
         </div>
       </div>
     </main>
+    </>
   );
 }
