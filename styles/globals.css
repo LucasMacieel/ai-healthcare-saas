@@ -59,7 +59,11 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -76,23 +80,43 @@ html {
 
 /* ─── Animated Gradient Background ─── */
 .medical-gradient {
-  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 25%, #ffffff 50%, #f0fdfa 75%, #ecfdf5 100%);
+  background: linear-gradient(
+    135deg,
+    #ecfdf5 0%,
+    #f0fdf4 25%,
+    #ffffff 50%,
+    #f0fdfa 75%,
+    #ecfdf5 100%
+  );
   background-size: 400% 400%;
   animation: gradientShift 12s ease infinite;
 }
 
 @media (prefers-color-scheme: dark) {
   .medical-gradient {
-    background: linear-gradient(135deg, #0c1a16 0%, #0f2420 25%, #0c1a16 50%, #0d1e1a 75%, #0c1a16 100%);
+    background: linear-gradient(
+      135deg,
+      #0c1a16 0%,
+      #0f2420 25%,
+      #0c1a16 50%,
+      #0d1e1a 75%,
+      #0c1a16 100%
+    );
     background-size: 400% 400%;
     animation: gradientShift 12s ease infinite;
   }
 }
 
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* ─── Glassmorphism Card ─── */
@@ -132,8 +156,13 @@ html {
 
 /* ─── Medical Pulse Animation ─── */
 @keyframes pulse-medical {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .pulse-medical {
@@ -142,8 +171,13 @@ html {
 
 /* ─── Floating Animation ─── */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 .float-animation {
@@ -166,9 +200,18 @@ html {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-.fade-in-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
-.fade-in-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
-.fade-in-up-delay-3 { animation-delay: 0.3s; opacity: 0; }
+.fade-in-up-delay-1 {
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+.fade-in-up-delay-2 {
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+.fade-in-up-delay-3 {
+  animation-delay: 0.3s;
+  opacity: 0;
+}
 
 /* ─── Markdown Content Styling ─── */
 @layer base {
@@ -302,6 +345,51 @@ html {
 /* ─── React DatePicker Override ─── */
 .react-datepicker-wrapper {
   width: 100%;
+}
+
+/* ─── Custom Select / Dropdown ─── */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23047857' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  padding-right: 2.75rem;
+  cursor: pointer;
+}
+
+select option {
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+select option:checked {
+  background: var(--primary-100);
+  color: var(--primary-800);
+}
+
+select option:hover {
+  background: var(--primary-50);
+}
+
+@media (prefers-color-scheme: dark) {
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236ee7b7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  }
+
+  select option {
+    background: #162e27;
+    color: #e8f0ed;
+  }
+
+  select option:checked {
+    background: #1e3d34;
+    color: #6ee7b7;
+  }
 }
 
 /* ─── Focus Ring ─── */

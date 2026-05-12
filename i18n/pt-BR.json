@@ -1,27 +1,20 @@
 {
-  "app_title": "MediNotes Pro",
+  "app_title": "MedNotes",
   "meta_title": "Assistente de Consultas Médicas",
   "meta_description": "Resumos de consultas médicas com inteligência artificial",
-
   "nav_sign_in": "Entrar",
   "nav_go_to_app": "Abrir App",
-
   "hero_title_1": "Transforme Suas",
   "hero_title_2": "Notas de Consulta",
   "hero_subtitle": "Assistente com IA que gera resumos profissionais, planos de ação e comunicações com pacientes a partir das suas notas de consulta",
-
   "feature_summaries_title": "Resumos Profissionais",
   "feature_summaries_desc": "Gere resumos completos de prontuários médicos a partir das suas anotações",
   "feature_actions_title": "Plano de Ação",
   "feature_actions_desc": "Próximos passos claros e ações de acompanhamento para cada consulta",
   "feature_emails_title": "E-mails ao Paciente",
   "feature_emails_desc": "Rascunhos de e-mails claros e acessíveis para os pacientes, gerados automaticamente",
-
-  "cta_free_trial": "Iniciar Teste Gratuito",
+  "cta_get_started": "Começar Agora",
   "cta_open_app": "Abrir Assistente de Consultas",
-
-  "trust_indicator": "Apenas para fins de demonstração",
-
   "consultation_heading": "Notas de Consulta",
   "label_patient_name": "Nome do Paciente",
   "placeholder_patient_name": "Digite o nome completo do paciente",
@@ -31,33 +24,24 @@
   "label_urgency": "Nível de Urgência",
   "label_notes": "Notas da Consulta",
   "placeholder_notes": "Digite as notas detalhadas da consulta...",
-
   "specialty_general": "Clínica Geral",
   "specialty_cardiology": "Cardiologia",
   "specialty_dermatology": "Dermatologia",
   "specialty_neurology": "Neurologia",
   "specialty_pediatrics": "Pediatria",
   "specialty_psychiatry": "Psiquiatria",
-
   "urgency_routine": "Rotina",
   "urgency_urgent": "Urgente",
   "urgency_emergency": "Emergência",
-
   "btn_generate": "Gerar Resumo",
   "btn_generating": "Gerando Resumo...",
   "btn_export_pdf": "Exportar PDF",
   "btn_copy_email": "Copiar E-mail",
   "btn_copied": "Copiado!",
-
   "auth_required": "Autenticação necessária",
   "email_not_found": "Seção de e-mail não encontrada no resumo.",
-
-  "subscription_heading": "Plano Profissional de Saúde",
-  "subscription_subtitle": "Otimize suas consultas com resumos gerados por inteligência artificial",
-
   "consultation_subtitle": "Preencha os dados da consulta abaixo",
   "generated_summary": "Resumo Gerado",
-  "premium_plans": "Planos Premium",
   "clinical_badge": "Documentação Clínica com IA",
-  "hipaa_compliant": "Compatível com HIPAA"
+  "footer_text": "© 2026 MedNotes. Todos os direitos reservados."
 }

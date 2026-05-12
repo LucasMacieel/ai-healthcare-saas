@@ -1,8 +1,8 @@
-# MediNotes Pro
+# MedNotes
 
 > AI-powered consultation note assistant for healthcare professionals
 
-MediNotes Pro transforms raw consultation notes into structured medical record summaries, actionable next steps, and patient-friendly email drafts — all in seconds, powered by Google Gemini.
+MedNotes transforms raw consultation notes into structured medical record summaries, actionable next steps, and patient-friendly email drafts — all in seconds, powered by Google Gemini.
 
 ---
 
@@ -15,7 +15,7 @@ MediNotes Pro transforms raw consultation notes into structured medical record s
 - **Patient Email Drafts** — Automatically drafts clear, patient-friendly follow-up emails from each consultation.
 - **Export to PDF** — One-click PDF export of the full consultation summary via `html2pdf.js`.
 - **Copy Email to Clipboard** — Extracts and copies just the patient email section with a single click.
-- **Subscription Gating** — Premium features protected behind a Clerk subscription plan (`premium_subscription`), with an embedded pricing table for upsell.
+- **Free & Open Access** — All features are available for free to authenticated users, with no subscription or paywall.
 - **Authentication** — Secure sign-in and JWT-based API authorization via Clerk.
 
 ---
@@ -61,18 +61,18 @@ Language support is implemented via a lightweight React Context (`LanguageContex
 
 ### Frontend
 
-| Package                         | Version | Purpose                    |
-| ------------------------------- | ------- | -------------------------- |
-| Next.js                         | 16.2.6  | React framework & routing  |
-| React                           | 19.2.4  | UI library                 |
-| TypeScript                      | ^5      | Type safety                |
-| Tailwind CSS                    | ^4      | Styling                    |
-| `@clerk/nextjs`                 | ^6.39.0 | Auth & subscription gating |
-| `@microsoft/fetch-event-source` | ^2.0.1  | SSE streaming client       |
-| `react-markdown`                | ^10.1.0 | Markdown rendering         |
-| `remark-gfm` / `remark-breaks`  | ^4      | Markdown plugins           |
-| `react-datepicker`              | ^9.1.0  | Date picker                |
-| `html2pdf.js`                   | ^0.14.0 | PDF export                 |
+| Package                         | Version | Purpose                   |
+| ------------------------------- | ------- | ------------------------- |
+| Next.js                         | 16.2.6  | React framework & routing |
+| React                           | 19.2.4  | UI library                |
+| TypeScript                      | ^5      | Type safety               |
+| Tailwind CSS                    | ^4      | Styling                   |
+| `@clerk/nextjs`                 | ^6.39.0 | Authentication            |
+| `@microsoft/fetch-event-source` | ^2.0.1  | SSE streaming client      |
+| `react-markdown`                | ^10.1.0 | Markdown rendering        |
+| `remark-gfm` / `remark-breaks`  | ^4      | Markdown plugins          |
+| `react-datepicker`              | ^9.1.0  | Date picker               |
+| `html2pdf.js`                   | ^0.14.0 | PDF export                |
 
 ### Backend
 
@@ -122,16 +122,7 @@ CLERK_JWKS_URL=https://<your-clerk-domain>/.well-known/jwks.json
 GEMINI_API_KEY=AIza...
 ```
 
-### 3. Configure Clerk Subscription
-
-In your Clerk dashboard:
-
-1. Create a **plan** with the slug `premium_subscription`.
-2. Enable the **Billing** feature and configure a pricing table.
-
-The `/product` page uses `<Protect plan="premium_subscription">` — users without an active subscription see the pricing table instead.
-
-### 4. Run the Development Servers
+### 3. Run the Development Servers
 
 You need to run both the Next.js frontend and the FastAPI backend simultaneously.
 

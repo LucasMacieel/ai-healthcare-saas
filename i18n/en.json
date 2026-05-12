@@ -1,5 +1,5 @@
 {
-  "app_title": "MediNotes Pro",
+  "app_title": "MedNotes",
   "meta_title": "Healthcare Consultation Assistant",
   "meta_description": "AI-powered medical consultation summaries",
   "nav_sign_in": "Sign In",
@@ -13,9 +13,8 @@
   "feature_actions_desc": "Clear next steps and follow-up actions for every consultation",
   "feature_emails_title": "Patient Emails",
   "feature_emails_desc": "Draft clear, patient-friendly email communications automatically",
-  "cta_free_trial": "Start Free Trial",
+  "cta_get_started": "Get Started",
   "cta_open_app": "Open Consultation Assistant",
-  "trust_indicator": "For demonstration purposes only",
   "consultation_heading": "Consultation Notes",
   "label_patient_name": "Patient Name",
   "placeholder_patient_name": "Enter patient's full name",
@@ -41,11 +40,8 @@
   "btn_copied": "Copied!",
   "auth_required": "Authentication required",
   "email_not_found": "Email section not found in the summary.",
-  "subscription_heading": "Healthcare Professional Plan",
-  "subscription_subtitle": "Streamline your patient consultations with AI-powered summaries",
   "consultation_subtitle": "Fill in the consultation details below",
   "generated_summary": "Generated Summary",
-  "premium_plans": "Premium Plans",
   "clinical_badge": "AI-Powered Clinical Documentation",
-  "hipaa_compliant": "HIPAA Compliant"
+  "footer_text": "© 2026 MedNotes. All rights reserved."
 }

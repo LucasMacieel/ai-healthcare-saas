@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
-import { Protect, PricingTable, UserButton } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 import { useLanguage } from "../i18n/LanguageContext";
 import LanguageToggle from "../i18n/LanguageToggle";
 import Link from "next/link";
@@ -238,24 +238,12 @@ function ConsultationForm() {
               onChange={(e) => setSpecialty(e.target.value)}
               className="w-full px-4 py-3 border border-emerald-200 dark:border-emerald-700/50 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-emerald-950/30 text-emerald-950 dark:text-emerald-50 transition-all duration-200"
             >
-              <option value="General Practice">
-                {t("specialty_general")}
-              </option>
-              <option value="Cardiology">
-                {t("specialty_cardiology")}
-              </option>
-              <option value="Dermatology">
-                {t("specialty_dermatology")}
-              </option>
-              <option value="Neurology">
-                {t("specialty_neurology")}
-              </option>
-              <option value="Pediatrics">
-                {t("specialty_pediatrics")}
-              </option>
-              <option value="Psychiatry">
-                {t("specialty_psychiatry")}
-              </option>
+              <option value="General Practice">{t("specialty_general")}</option>
+              <option value="Cardiology">{t("specialty_cardiology")}</option>
+              <option value="Dermatology">{t("specialty_dermatology")}</option>
+              <option value="Neurology">{t("specialty_neurology")}</option>
+              <option value="Pediatrics">{t("specialty_pediatrics")}</option>
+              <option value="Psychiatry">{t("specialty_psychiatry")}</option>
             </select>
           </div>
 
@@ -467,7 +455,7 @@ export default function Product() {
   const { t } = useLanguage();
 
   return (
-    <main className="min-h-screen medical-gradient">
+    <main className="min-h-screen medical-gradient flex flex-col">
       {/* Top Bar */}
       <div className="sticky top-0 z-50 border-b border-emerald-100 dark:border-emerald-800/50 bg-white/80 dark:bg-emerald-950/80 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -494,49 +482,24 @@ export default function Product() {
           </Link>
           <div className="flex items-center gap-3">
             <LanguageToggle />
-            <UserButton showName={true} />
+            <UserButton
+              showName={true}
+              appearance={{
+                elements: { userButtonOuterIdentifier: { color: "white" } },
+              }}
+            />
           </div>
         </div>
       </div>
 
-      {/* Subscription Protection */}
-      <Protect
-        plan="premium_subscription"
-        fallback={
-          <div className="container mx-auto px-4 py-16 fade-in-up">
-            <header className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {t("premium_plans")}
-              </div>
-              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-                <span className="text-emerald-950 dark:text-white">
-                  {t("subscription_heading")}
-                </span>
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-lg mb-8 max-w-xl mx-auto">
-                {t("subscription_subtitle")}
-              </p>
-            </header>
-            <div className="max-w-4xl mx-auto">
-              <PricingTable />
-            </div>
-          </div>
-        }
-      >
+      <div className="flex-grow">
         <ConsultationForm />
-      </Protect>
+      </div>
+
+      {/* Footer */}
+      <footer className="py-8 text-center text-sm font-medium text-emerald-800/60 dark:text-emerald-200/60 mt-auto">
+        <p>{t("footer_text")}</p>
+      </footer>
     </main>
   );
 }

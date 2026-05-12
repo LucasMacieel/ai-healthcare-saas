@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI, Depends  # type: ignore
 from fastapi.responses import StreamingResponse  # type: ignore
 from pydantic import BaseModel  # type: ignore
-from fastapi_clerk_auth import ( # type: ignore
+from fastapi_clerk_auth import (  # type: ignore
     ClerkConfig,
     ClerkHTTPBearer,
     HTTPAuthorizationCredentials,
