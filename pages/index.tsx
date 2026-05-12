@@ -3,11 +3,13 @@
 import Head from "next/head";
 import Link from "next/link";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { useLanguage } from "../i18n/LanguageContext";
-import LanguageToggle from "../i18n/LanguageToggle";
+import { useTranslation } from "next-i18next/pages";
+import { serverSideTranslations } from "next-i18next/pages/serverSideTranslations";
+import type { GetStaticProps } from "next";
+import LanguageToggle from "../components/LanguageToggle";
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
 
   return (
     <>
@@ -178,3 +180,9 @@ export default function Home() {
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? "en", ["common"])),
+  },
+});

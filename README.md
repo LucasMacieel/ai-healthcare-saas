@@ -11,7 +11,7 @@ MedNotes transforms raw consultation notes into structured medical record summar
 - **AI-Powered Summaries** — Generates structured consultation summaries for doctor records using Gemini 2.5 Flash with real-time streaming output.
 - **Specialty-Aware Prompts** — Tailored AI instructions for six medical specialties: General Practice, Cardiology, Dermatology, Neurology, Pediatrics, and Psychiatry.
 - **Urgency Triage** — Supports three urgency levels (Routine, Urgent, Emergency) to contextualize AI-generated recommendations.
-- **Bilingual Support (EN / PT-BR)** — Full internationalization for English and Brazilian Portuguese. The UI auto-detects the browser language, persists the choice in `localStorage`, and the LLM system prompt adapts so AI output is generated in the selected language.
+- **Bilingual Support (EN / PT-BR)** — Full internationalization for English and Brazilian Portuguese via [`next-i18next`](https://github.com/i18next/next-i18next) with URL-based locale routing (`/` for English, `/pt-BR` for Portuguese). The LLM system prompt adapts so AI output is generated in the selected language.
 - **Patient Email Drafts** — Automatically drafts clear, patient-friendly follow-up emails from each consultation.
 - **Export to PDF** — One-click PDF export of the full consultation summary via `html2pdf.js`.
 - **Copy Email to Clipboard** — Extracts and copies just the patient email section with a single click.
@@ -48,12 +48,12 @@ The frontend uses **Server-Sent Events (SSE)** via `@microsoft/fetch-event-sourc
 
 ### Internationalization (i18n)
 
-Language support is implemented via a lightweight React Context (`LanguageContext`) with JSON dictionaries — no external i18n library is required.
+Language support is implemented via [`next-i18next`](https://github.com/i18next/next-i18next) (Pages Router API) with `i18next` and `react-i18next`.
 
-1. **Browser auto-detection** — On first visit, `navigator.language` is checked; if it starts with `pt`, the UI defaults to Brazilian Portuguese.
-2. **LocalStorage persistence** — The user's language choice is saved and restored on subsequent visits.
-3. **Language toggle** — A 🇺🇸/🇧🇷 toggle button is available on every page.
-4. **Backend integration** — The selected locale is sent as a `language` field in the API request. The backend uses language-specific system prompts and user prompt templates so the LLM generates output in the correct language.
+1. **URL-based locale routing** — Next.js built-in `i18n` routing serves English at `/` and Portuguese at `/pt-BR/...`. The `NEXT_LOCALE` cookie persists the user's preference.
+2. **SSG translations** — Each page uses `getStaticProps` with `serverSideTranslations` to load the correct locale's translations at build time.
+3. **Language toggle** — A 🇺🇸/🇧🇷 toggle button uses `next/router` to switch locales via URL navigation.
+4. **Backend integration** — The active locale (`i18n.language`) is sent as a `language` field in the API request. The backend uses language-specific system prompts and user prompt templates so the LLM generates output in the correct language.
 
 ---
 
@@ -73,6 +73,8 @@ Language support is implemented via a lightweight React Context (`LanguageContex
 | `remark-gfm` / `remark-breaks`  | ^4      | Markdown plugins          |
 | `react-datepicker`              | ^9.1.0  | Date picker               |
 | `html2pdf.js`                   | ^0.14.0 | PDF export                |
+| `next-i18next`                  | latest  | Internationalization      |
+| `i18next` / `react-i18next`     | latest  | i18n core & React hooks   |
 
 ### Backend
 
@@ -150,21 +152,22 @@ uvicorn api.index:app --reload --port 8000
 saas/
 ├── api/
 │   └── index.py              # FastAPI app — /api endpoint, Gemini streaming
-├── i18n/
-│   ├── en.json               # English translation dictionary
-│   ├── pt-BR.json            # Brazilian Portuguese translation dictionary
-│   ├── LanguageContext.tsx   # React Context — locale state, auto-detect, t()
-│   └── LanguageToggle.tsx    # 🇺🇸/🇧🇷 toggle button component
+├── components/
+│   └── LanguageToggle.tsx    # 🇺🇸/🇧🇷 toggle button (uses next/router)
 ├── pages/
-│   ├── _app.tsx              # App wrapper (Clerk + LanguageProvider)
+│   ├── _app.tsx              # App wrapper (Clerk + appWithTranslation)
 │   ├── _document.tsx         # Custom HTML document
 │   ├── index.tsx             # Landing page with feature showcase
 │   └── product.tsx           # Consultation form + AI output
+├── public/
+│   └── locales/
+│       ├── en/common.json    # English translations
+│       └── pt-BR/common.json # Brazilian Portuguese translations
 ├── styles/                   # Global CSS
-├── public/                   # Static assets
+├── next-i18next.config.js    # next-i18next configuration
 ├── requirements.txt          # Python dependencies
 ├── package.json              # Node dependencies & scripts
-├── next.config.ts            # Next.js configuration
+├── next.config.ts            # Next.js configuration (with i18n)
 └── tsconfig.json             # TypeScript configuration
 ```
 

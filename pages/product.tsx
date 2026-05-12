@@ -8,13 +8,16 @@ import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { UserButton } from "@clerk/nextjs";
-import { useLanguage } from "../i18n/LanguageContext";
-import LanguageToggle from "../i18n/LanguageToggle";
+import { useTranslation } from "next-i18next/pages";
+import { serverSideTranslations } from "next-i18next/pages/serverSideTranslations";
+import type { GetStaticProps } from "next";
+import LanguageToggle from "../components/LanguageToggle";
 import Link from "next/link";
 
 function ConsultationForm() {
   const { getToken } = useAuth();
-  const { locale, t } = useLanguage();
+  const { t, i18n } = useTranslation("common");
+  const locale = i18n.language;
 
   // Form state
   const [patientName, setPatientName] = useState("");
@@ -452,7 +455,7 @@ function ConsultationForm() {
 }
 
 export default function Product() {
-  const { t } = useLanguage();
+  const { t } = useTranslation("common");
 
   return (
     <main className="min-h-screen medical-gradient flex flex-col">
@@ -503,3 +506,9 @@ export default function Product() {
     </main>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? "en", ["common"])),
+  },
+});
